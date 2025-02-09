@@ -58,14 +58,15 @@ public class MyDeque{
     public boolean isEmpty(){
         return front.next == back;
     }
-}
 
-
-class Node{
-    int val;
-    Node next;
-    Node prev;
-    Node(int val){
-        this.val = val;
+    private class Node{
+        int val;
+        Node next;
+        Node prev;
+        Node(int val){
+            this.val = val;
+        }
     }
 }
+
+

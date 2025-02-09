@@ -1,6 +1,6 @@
 package DataStructures;
 
-public class Queue {
+public class MyQueue {
     Node front;
     Node back;
 

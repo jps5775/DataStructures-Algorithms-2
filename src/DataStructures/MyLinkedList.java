@@ -1,6 +1,6 @@
 package DataStructures;
 
-public class LinkedList {
+public class MyLinkedList {
     Node head;
 
     public void prepend(int val){

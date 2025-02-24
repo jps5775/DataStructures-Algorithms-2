@@ -1,58 +1,63 @@
 package DataStructures;
 
-public class MyHashMap {
-    Node[] arr;
+import java.util.Arrays;
 
-    public MyHashMap(int n){
-        arr = new Node[n];
-        for(int i = 0; i < n; i++){
-            arr[i] = new Node();
-        }
+public class MyHashMap {
+    Node[] map;
+
+    public MyHashMap(int size) {
+        map = new Node[size];
+        Arrays.fill(map, new Node());
     }
 
-    public void put(int key, int val){
-        int hashIndex = getHash(key);
-        Node curr = arr[hashIndex];
+    public void put(int key, int value) {
+        int index = getHash(key);
+
+        Node curr = map[index];
         while(curr.next != null){
             if(curr.next.key == key){
-                curr.next.val = val;
+                curr.next.val = value;
                 return;
             }
             curr = curr.next;
         }
-        curr.next = new Node(key, val);
+        curr.next = new Node(key, value);
     }
 
-    public int get(int key){
-        int hashIndex = getHash(key);
-        Node curr = arr[hashIndex];
+    public int get(int key) {
+        int index = getHash(key);
+
+        Node curr = map[index];
+        int ans = -1;
         while(curr.next != null){
             if(curr.next.key == key){
-                return curr.next.val;
+                ans = curr.next.val;
+                break;
             }
             curr = curr.next;
         }
 
-        return -1;
+        return ans;
     }
 
-    public void remove(int key){
-        int hashIndex = getHash(key);
-        Node curr = arr[hashIndex];
-        while(curr.next != null && curr.next.key != key){
+    public void remove(int key) {
+        int index = getHash(key);
+
+        Node curr = map[index];
+        while(curr.next != null){
+            if(curr.next.key == key){
+                curr.next = curr.next.next;
+                return;
+            }
             curr = curr.next;
         }
-
-        if(curr.next == null){ return; }
-
-        curr.next = curr.next.next;
     }
 
     private int getHash(int key){
-        return key % arr.length;
+        return key % map.length;
     }
 
-    private class Node{
+    class Node{
         int key;
         int val;
         Node next;
@@ -62,6 +67,4 @@ public class MyHashMap {
             this.val = val;
         }
     }
-
-
 }

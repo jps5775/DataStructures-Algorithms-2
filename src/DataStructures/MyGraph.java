@@ -25,6 +25,61 @@ public class MyGraph {
         }
     }
 
+    public boolean containsCycle(){
+        Set<Integer> visited = new HashSet<>();
+        for(int node : graph.keySet()){
+            if(checkCycleDFS(node, visited)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean checkCycleDFS(int curr, Set<Integer> visited){
+        visited.add(curr);
+
+        for(int neighbor : graph.get(curr)){
+            if(!visited.contains(neighbor)){
+                if(checkCycleDFS(neighbor, visited)) return true;
+                visited.remove(neighbor);
+            }else{
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public List<List<Integer>> getAllPaths(int source, int target){
+        List<List<Integer>> allPaths = new ArrayList<>();
+        findAllPaths(source, target, allPaths, new HashSet<>(), new ArrayList<>());
+        return allPaths;
+    }
+
+    private void findAllPaths(int source, int target, List<List<Integer>> allPaths, Set<Integer> visited, List<Integer> currPath){
+        if(visited.contains(source)){ return; }
+        if(source == target){
+            // add the target since I arrived there
+            currPath.add(target);
+            allPaths.add(new ArrayList<>(currPath));
+            currPath.removeLast();
+            return;
+        }
+
+        visited.add(source);
+        currPath.add(source);
+
+        for(int neighbor : graph.get(source)){
+            if(!visited.contains(neighbor)){
+                findAllPaths(neighbor, target, allPaths, visited, currPath);
+            }
+        }
+
+        visited.remove(source);
+        currPath.removeLast();
+    }
+
     public List<Integer> getShortestPath(int source, int target) {
         if (source == target) {
             return new ArrayList<>() {{ add(source); }};
@@ -137,8 +192,15 @@ public class MyGraph {
         };
 
         MyGraph g = new MyGraph(edgeList, true);
-//        System.out.println(g.getShortestPath(1, 5));
-        System.out.println(g.containsNode(8, false));
+//        List<List<Integer>> paths = g.getAllPaths(1, 6);
+//        for(List<Integer> path : paths){
+//            for(int i = 0; i < path.size(); i++){
+//                System.out.print(path.get(i) + " -> ");
+//            }
+//            System.out.println();
+//        }
+
+        System.out.println(g.containsCycle());
 
     }
 }

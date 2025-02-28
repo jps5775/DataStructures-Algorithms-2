@@ -25,7 +25,42 @@ public class MyGraph {
         }
     }
 
-    public boolean containsCycle(){
+    // TODO: do containsCycle with BFS
+    // TODO: find all components
+    // TODO: find min path in a weighted graph - Dijkstra's algorithm
+    public Map<Integer, Integer> dijkstrasAlgo(Map<Integer, List<int[]>> graph, int source){
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        Map<Integer, Integer> minDist = new HashMap<>();
+        for(int node : graph.keySet()){ minDist.put(node, Integer.MAX_VALUE); }
+        Set<Integer> visited = new HashSet<>();
+
+        minDist.put(source, 0);
+        minHeap.offer(new int[]{ source, 0 });
+        while(!minHeap.isEmpty()){
+            int[] curr = minHeap.poll();
+            int node = curr[0];
+            int weight = curr[1];
+            // you might visit curr in some other path
+            // where when you initially queued it, it wasn't visited
+            if (visited.contains(node)) {
+                continue;
+            }
+            visited.add(node);
+            minDist.put(node, weight);
+
+            if (graph.containsKey(node)) {
+                for (int[] neighbor : graph.get(node)) {
+                    if (!visited.contains(neighbor[0])) {
+                        minHeap.offer(new int[]{neighbor[0], neighbor[1] + weight});
+                    }
+                }
+            }
+        }
+
+        return minDist;
+    }
+
+    public boolean containsCycle(boolean useDFS){
         Set<Integer> visited = new HashSet<>();
         for(int node : graph.keySet()){
             if(checkCycleDFS(node, visited)){
@@ -192,15 +227,17 @@ public class MyGraph {
         };
 
         MyGraph g = new MyGraph(edgeList, true);
-//        List<List<Integer>> paths = g.getAllPaths(1, 6);
-//        for(List<Integer> path : paths){
-//            for(int i = 0; i < path.size(); i++){
-//                System.out.print(path.get(i) + " -> ");
-//            }
-//            System.out.println();
-//        }
+        Map<Integer, List<int[]>> weightedGraph = new HashMap<>(){{
+            put(1, Arrays.asList(new int[]{ 2, 4 }));
+            put(1, Arrays.asList(new int[]{ 3, 1 }));
+            put(3, Arrays.asList(new int[]{ 4, 1 }));
+            put(4, Arrays.asList(new int[]{ 2, 1 }));
+        }};
 
-        System.out.println(g.containsCycle());
+        Map<Integer, Integer> minDist = g.dijkstrasAlgo(weightedGraph, 1);
+        for(int key : minDist.keySet()){
+            System.out.println(key + " -> " + minDist.get(key));
+        }
 
     }
 }

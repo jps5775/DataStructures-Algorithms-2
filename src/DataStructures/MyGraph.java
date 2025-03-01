@@ -25,9 +25,6 @@ public class MyGraph {
         }
     }
 
-    // TODO: do containsCycle with BFS
-    // TODO: find all components
-    // TODO: find min path in a weighted graph - Dijkstra's algorithm
     public Map<Integer, Integer> dijkstrasAlgo(Map<Integer, List<int[]>> graph, int source){
         PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> a[1] - b[1]);
         Map<Integer, Integer> minDist = new HashMap<>();
@@ -48,6 +45,8 @@ public class MyGraph {
             visited.add(node);
             minDist.put(node, weight);
 
+            // This means that our node doesn't have any outgoing paths / neighbors
+            // meaning there was no mapping node -> some other node
             if (graph.containsKey(node)) {
                 for (int[] neighbor : graph.get(node)) {
                     if (!visited.contains(neighbor[0])) {

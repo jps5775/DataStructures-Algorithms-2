@@ -28,8 +28,8 @@ public class ParkingLot {
                 for(int j = 0; j < vehicle.getSize(); j++){
                     parkingSpots.get(i).add(vehicle);
                     openSpotsByLevel[i] = parkingSpots.get(i).size();
-                    return true;
                 }
+                return true;
             }
         }
 

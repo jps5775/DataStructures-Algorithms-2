@@ -5,6 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ParkingLot {
+    // NOTE: to optimize searching / removing use -> List<Set<Vehicle>>
+    //      this brings down to time complexity from O(levels * levelSize) to O(levels)
+    // searching / removing -> for each level do level.contains(Vehicle) and if so do level.contains(Vehicle)
+    //              and update openSpots
+    //
     private List<List<Vehicle>> parkingSpots;
     private int totalLevels;
     private int[] openSpotsByLevel;

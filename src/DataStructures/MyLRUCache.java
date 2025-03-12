@@ -1,74 +1,81 @@
 package DataStructures;
 
 import java.util.HashMap;
+import java.util.Map;
 
-public class MyLRUCache {
+class MyLRUCache {
 
-    private int cap;
-    private HashMap<Integer, Node> cache;
-    private Node left;
-    private Node right;
+    Node front;
+    Node back;
+    Map<Integer, Node> map;
+    int capacity;
 
     public MyLRUCache(int capacity) {
-        this.cap = capacity;
-        this.cache = new HashMap<>();
-        this.left = new Node(0, 0);
-        this.right = new Node(0, 0);
-        this.left.next = this.right;
-        this.right.prev = this.left;
-    }
-
-    private void remove(Node node) {
-        Node prev = node.prev;
-        Node nxt = node.next;
-        prev.next = nxt;
-        nxt.prev = prev;
-    }
-
-    private void insert(Node node) {
-        Node prev = this.right.prev;
-        prev.next = node;
-        node.prev = prev;
-        node.next = this.right;
-        this.right.prev = node;
+        this.capacity = capacity;
+        front = new Node();
+        back = new Node();
+        map = new HashMap<>();
+        front.next = back;
+        back.prev = front;
     }
 
     public int get(int key) {
-        if (cache.containsKey(key)) {
-            Node node = cache.get(key);
-            remove(node);
-            insert(node);
-            return node.val;
-        }
-        return -1;
+        if(!map.containsKey(key)) return -1;
+
+        Node node = map.get(key);
+        remove(node);
+        addToBack(node);
+
+        return node.val;
     }
 
     public void put(int key, int value) {
-        if (cache.containsKey(key)) {
-            remove(cache.get(key));
+        if(map.containsKey(key)){
+            // update and move to back
+            Node node = map.get(key);
+            node.val = value;
+            remove(node);
+            addToBack(node);
+            return;
         }
-        Node newNode = new Node(key, value);
-        cache.put(key, newNode);
-        insert(newNode);
 
-        if (cache.size() > cap) {
-            Node lru = this.left.next;
-            remove(lru);
-            cache.remove(lru.key);
+        if(map.size() == capacity){
+            // evict front
+            Node removeNode = front.next;
+            map.remove(removeNode.key);
+            remove(removeNode);
         }
+
+        Node newNode = new Node(key, value);
+
+        map.put(key, newNode);
+        addToBack(newNode);
     }
 
-    class Node {
+    public void remove(Node node){
+        Node prev = node.prev;
+        Node next = node.next;
+        prev.next = next;
+        next.prev = prev;
+    }
+
+    public void addToBack(Node node){
+        Node prev = back.prev;
+        prev.next = node;
+        node.next = back;
+        back.prev = node;
+        node.prev = prev;
+    }
+
+    class Node{
         int key;
         int val;
-        Node prev;
         Node next;
-
-        public Node(int key, int val) {
+        Node prev;
+        Node(){}
+        Node(int key, int val){
             this.key = key;
             this.val = val;
-            this.prev = null;
-            this.next = null;
         }
     }
 }

@@ -213,6 +213,48 @@ public class MyGraph {
         return false;
     }
 
+    // Dijkstra's Algorithm ( shortestPath from node src -> to all other nodes )
+    public Map<Integer, Integer> shortestPath(int n, List<List<Integer>> edges, int src) {
+        Map<Integer, List<int[]>> graph = new HashMap<>();
+        for(int i = 0; i < n; i++){
+            graph.put(i, new ArrayList<>());
+        }
+
+        for(List<Integer> edge : edges){
+            int from = edge.get(0);
+            int to = edge.get(1);
+            int weight = edge.get(2);
+
+            graph.get(from).add(new int[]{to, weight});
+        }
+
+        Map<Integer, Integer> shortestPaths = new HashMap<>();
+        PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> a[1] - b[1]); // [ node, weight ] and sort on weight
+        q.add(new int[]{ src, 0 }); // to get to node 0 from node 0 => costs 0
+
+        while(!q.isEmpty()){
+            int[] node = q.poll();
+
+            // already visited, using shortestPaths map to check that
+            if(shortestPaths.containsKey(node[0])) continue;
+
+            shortestPaths.put(node[0], node[1]);
+
+            for(int[] child : graph.get(node[0])){
+                // add the weight of my child and the node I'm coming from
+                q.add(new int[]{ child[0], child[1] + node[1]});
+            }
+        }
+
+        for(int i = 0; i < n; i++){
+            if(!shortestPaths.containsKey(i)){
+                shortestPaths.put(i, -1);
+            }
+        }
+
+        return shortestPaths;
+    }
+
     public static void main(String[] args){
         int[][] edgeList = {
                 {1, 2},

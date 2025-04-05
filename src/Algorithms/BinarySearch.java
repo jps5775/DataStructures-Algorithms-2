@@ -7,6 +7,52 @@ public class BinarySearch {
         arr = new int[n];
     }
 
+    // Finds right most target value
+    // Ex: [1 2 3 3 3 4 5]
+    // -> returns index 4
+    // * better solution because this handles n == 1 && n == 2 cases
+    private int bsRightMost(int[] nums, int target){
+        int left = 0;
+        int right = nums.length - 1;
+        int ans = -1;
+
+        while(left <= right){
+            int mid = (left + right) / 2;
+
+            if(nums[mid] <= target){
+                if(nums[mid] == target) ans = mid;
+                left = mid + 1;
+            }else{
+                right = mid - 1;
+            }
+        }
+
+        return ans;
+    }
+
+    // Finds left most target value
+    // Ex: [1 2 3 3 3 4 5]
+    // -> returns index 2
+    // * better solution because this handles n == 1 && n == 2 cases
+    private int bsLeftMost(int[] nums, int target){
+        int left = 0;
+        int right = nums.length - 1;
+        int ans = -1;
+
+        while(left <= right){
+            int mid = (left + right) / 2;
+
+            if(nums[mid] < target){
+                left = mid + 1;
+            }else{
+                if(nums[mid] == target) ans = mid;
+                right = mid - 1;
+            }
+        }
+
+        return ans;
+    }
+
     // e.g. nums = [ 4, 5, 5, 6 ] target = 5
     //             [ F  T  T  T ]
 

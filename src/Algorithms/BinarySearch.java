@@ -7,11 +7,28 @@ public class BinarySearch {
         arr = new int[n];
     }
 
+    // Looking for the index of the first element that satisfies some property.
+    // F F T T T T <- find first index that has TRUE
+    public int bsFristElementThatSatisfiesSomeProperty(int[] nums){
+        int left = 0, right = nums.length - 1; // add +1 to 'right' if the answer can be outside [left, right]
+        while(left < right) {
+            int mid = left + (right - left) / 2;
+            if(property(mid)){
+                right = mid;
+            }else{
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    private boolean property(int val){ return true; }
+
     // Finds right most target value
     // Ex: [1 2 3 3 3 4 5]
     // -> returns index 4
     // * better solution because this handles n == 1 && n == 2 cases
-    private int bsRightMost(int[] nums, int target){
+    public int bsRightMost(int[] nums, int target){
         int left = 0;
         int right = nums.length - 1;
         int ans = -1;
@@ -34,7 +51,7 @@ public class BinarySearch {
     // Ex: [1 2 3 3 3 4 5]
     // -> returns index 2
     // * better solution because this handles n == 1 && n == 2 cases
-    private int bsLeftMost(int[] nums, int target){
+    public int bsLeftMost(int[] nums, int target){
         int left = 0;
         int right = nums.length - 1;
         int ans = -1;
